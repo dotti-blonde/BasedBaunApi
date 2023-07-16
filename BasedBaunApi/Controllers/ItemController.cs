@@ -37,22 +37,21 @@ public class ItemController : ControllerBase
 
     // PUT: api/Item/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutItem(int itemId, ItemDto.ItemUpdateDto item)
+    public async Task<IActionResult> PutItem(int itemId, ItemDto.ItemUpdateDto itemUpdateDto)
     {
-        if (itemId != item.ItemId) return BadRequest();
-
-        _context.Entry(item).State = EntityState.Modified;
-
         try
         {
+            var itemComplete = _context.Items.First(i => i.ItemId == itemId);
+
+            itemComplete.Description = itemUpdateDto.Description;
+            itemComplete.Lane = itemUpdateDto.Lane;
+
+            _context.Entry(itemComplete).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (ArgumentNullException)
         {
-            if (!ItemExists(itemId))
-                return NotFound();
-            else
-                throw;
+            return NotFound();
         }
 
         return NoContent();
@@ -63,7 +62,7 @@ public class ItemController : ControllerBase
     public async Task<ActionResult<Item>> PostItem(ItemDto.ItemCreateDto item)
     {
         if (_context.Items == null) return Problem("Entity set 'ItemContext.Items'  is null.");
-        var entityEntry = _context.Items.Add(new Item { Description = item.Description, Lane = item.Lane});
+        var entityEntry = _context.Items.Add(new Item { Description = item.Description, Lane = item.Lane });
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetItem), new { id = entityEntry.Entity.ItemId }, entityEntry.Entity);

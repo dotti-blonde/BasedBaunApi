@@ -18,6 +18,5 @@ public class ItemDto
 
     public class ItemUpdateDto : ItemCreateDto
     {
-        public int ItemId { get; set; }
     }
 }
