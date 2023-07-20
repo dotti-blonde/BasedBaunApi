@@ -1,10 +1,12 @@
+using BasedBaunApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BasedBaunApi.Models;
 
 namespace BasedBaunApi.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class ItemController : ControllerBase
 {
