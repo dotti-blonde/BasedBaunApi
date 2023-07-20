@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace BasedBaunApi.Models;
 
-using Microsoft.EntityFrameworkCore;
-
-public class ItemContext : IdentityUserContext<IdentityUser> 
+public class ItemContext : IdentityUserContext<IdentityUser>
 {
     public ItemContext(DbContextOptions<ItemContext> options)
         : base(options)
     {
     }
-    
+
+    public DbSet<Item> Items { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Item>()
@@ -19,6 +20,4 @@ public class ItemContext : IdentityUserContext<IdentityUser>
             .HasDefaultValueSql("now() at time zone 'utc'");
         base.OnModelCreating(modelBuilder);
     }
-
-    public DbSet<Item> Items { get; set; } = null!;
 }
